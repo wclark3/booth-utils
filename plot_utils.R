@@ -64,3 +64,13 @@ PlotDone <- function(plotOpts. = Global.PlotOpts) {
   
   dev.off()
 }
+
+GGPlotSave <- function(g, filename, plotOpts. = Global.PlotOpts) {
+  plot(g)
+  if (plotOpts.$WriteToFile == F) return()
+
+  fname <- GetFilename(paste(filename, plotOpts.$FileType, sep = '.'), 
+                       plotOpts = plotOpts.) 
+  ggsave(fname, plot=g, width=plotOpts.$Width, height=plotOpts.$Height, 
+         units=plotOpts.$Units, dpi=plotOpts.$Res)
+}
