@@ -38,15 +38,17 @@ PlotAcf <- function(acf.out, acf_type, alpha, n, label.ci=T, style='bar') {
   if (style=='bar') {
     g <- g + geom_bar(stat='identity', position='identity', aes(fill=fill)) + 
       geom_hline(aes(yintercept=-ci), lty='dashed', color=alpha("blue", 0.5), lwd=0.75) +
-      geom_hline(aes(yintercept=ci), lty='dashed', color=alpha("blue", 0.5), lwd=0.75)
+      geom_hline(aes(yintercept=ci), lty='dashed', color=alpha("blue", 0.5), lwd=0.75) +
+      scale_fill_manual(values=fill.palette)
   } else {
     g <- g + 
       geom_hline(aes(yintercept=-ci), lty='dashed', color=alpha('#000000', 0.6), lwd=0.75) +
       geom_hline(aes(yintercept=ci), lty='dashed', color=alpha('#000000', 0.6), lwd=0.75) + 
       geom_point(aes(color=fill)) + 
-      geom_segment(aes(x=lag, xend=lag, y=0, yend=acf, color=fill))
+      geom_segment(aes(x=lag, xend=lag, y=0, yend=acf, color=fill)) +
+      scale_color_manual(values=fill.palette)
   }
-  g <- g + guides(fill=F) + scale_fill_manual(values=fill.palette) + 
+  g <- g + guides(fill=F) + 
     coord_flip(ylim=c(-lims, lims), xlim=c(0, max(dat$lag))) + scale_x_reverse() + 
     theme_bw() + theme(legend.position='none')
   
