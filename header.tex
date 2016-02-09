@@ -18,6 +18,9 @@
 \usepackage{chngpage}
 \usepackage[titletoc,toc,title]{appendix}
 
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\alph{subsection}}
+
 \lstset{
   frame=single,
   basicstyle=\ttfamily,% print whole listing small
