@@ -2,14 +2,16 @@ library(xtable)
 
 ExportTable <- function(table, file, caption, colnames=NULL, 
                         align=NULL, digits=NULL, display=NULL,
-                        include.rownames=T, floating=TRUE) {
+                        include.rownames=T, floating=TRUE,
+                        NA.string="NaN") {
   if (!is.null(colnames)) { colnames(table) = colnames }
   print(xtable(table, label=paste('tab:', file, sep=''), caption=caption,
                align=align, digits=digits, display=display),
         caption.placement="top",
         sanitize.text.function=function(x){x},
         file=GetFilename(paste(file, '.tex', sep='')),
-        include.rownames=include.rownames, floating=floating)
+        include.rownames=include.rownames, floating=floating,
+        NA.string=NA.string)
 }
 
 ExportWideTable <- function(table, file, caption, colnames=NULL, 
