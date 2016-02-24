@@ -1,5 +1,7 @@
 source('cache_utils.R')
 source('confuse.R')
+source('correl.R')
+source('dates.R')
 source('ggplot_utils.R')
 source('partition_utils.R')
 source('plot_utils.R')
