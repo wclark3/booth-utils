@@ -100,3 +100,37 @@ Correlogram <- function(d, lag.max, alpha=0.05, label.ci = T, style = 'bar') {
   g <- arrangeGrob(g_acf, g_pacf, g_text, layout_matrix=matrix(c(1, 2, 3, 3), ncol=4))
   return(g)
 }
+
+VARCorrelogram <- function(resids, lag.max=20, alpha=0.05) {
+  lag.max=20
+  alpha=0.05
+  ci <- qnorm(1-alpha/2, 0, 1)/nrow(resids)^.5
+  ccs <- data.frame(lag=1:lag.max)
+  for (first in colnames(resids)) {
+    for (second in colnames(resids)) {
+      res <- ccf(resids[,first], resids[,second], lag.max=lag.max, plot=F)[1:lag.max]
+      df <- data.frame(lag=res$lag, acf=res$acf)
+      colnames(df)[2] <- sprintf("Cor(%s,%s)", first, second)
+      ccs <- merge(ccs, df, by="lag")
+    }
+  }
+  require(reshape2)
+  # melt(ccs, id.var='lag')
+  require(ggplot2)
+  ccs.melt <- melt(ccs, id.var='lag')
+  fill.palette <- gg_color_hue(2)
+  if (all(abs(ccs.melt$value) >= ci)) {
+    fill.palette <- fill.palette[1]
+  }
+  if (all(abs(ccs.melt$value) < ci)) {
+    fill.palette <- fill.palette[2]
+  }
+  ccs.melt$fill <- abs(ccs.melt$value) < ci
+
+  g <- ggplot(ccs.melt, aes(x=lag, y=value, fill=fill)) +
+    geom_hline(aes(yintercept=ci), lty='dashed', color=alpha('black', 0.6), lwd=0.75) +
+    geom_hline(aes(yintercept=-ci), lty='dashed', color=alpha('black', 0.6), lwd=0.75) +
+    geom_bar(stat='identity', position='identity') + facet_wrap(~variable) +
+    theme_bw() + theme(legend.position='none') + labs(x="Lag", y="Cor")
+  return(g)
+}
