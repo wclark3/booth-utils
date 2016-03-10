@@ -127,10 +127,10 @@ VARCorrelogram <- function(resids, lag.max=20, alpha=0.05) {
   ccs.melt$fill <- abs(ccs.melt$value) < ci
 
   g <- ggplot(ccs.melt, aes(x=lag, y=value, fill=fill)) +
-    geom_hline(aes(yintercept=ci), lty='dashed', color=alpha('black', 0.6), lwd=0.75) +
-    geom_hline(aes(yintercept=-ci), lty='dashed', color=alpha('black', 0.6), lwd=0.75) +
     geom_bar(stat='identity', position='identity') + facet_wrap(~variable) +
     scale_fill_manual(values=fill.palette) +
+    geom_hline(aes(yintercept=ci), lty='dashed', color=alpha('black', 0.6), lwd=0.75) +
+    geom_hline(aes(yintercept=-ci), lty='dashed', color=alpha('black', 0.6), lwd=0.75) +
     theme_bw() + theme(legend.position='none') + labs(x="Lag", y="Cor")
   return(g)
 }
