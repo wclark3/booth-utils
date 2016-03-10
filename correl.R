@@ -102,9 +102,7 @@ Correlogram <- function(d, lag.max, alpha=0.05, label.ci = T, style = 'bar') {
 }
 
 VARCorrelogram <- function(resids, lag.max=20, alpha=0.05) {
-  lag.max=20
-  alpha=0.05
-  ci <- qnorm(1-alpha/2, 0, 1)/nrow(resids)^.5
+  # Calculate the CCF
   ccs <- data.frame(lag=1:lag.max)
   for (first in colnames(resids)) {
     for (second in colnames(resids)) {
@@ -114,10 +112,11 @@ VARCorrelogram <- function(resids, lag.max=20, alpha=0.05) {
       ccs <- merge(ccs, df, by="lag")
     }
   }
-  require(reshape2)
-  # melt(ccs, id.var='lag')
-  require(ggplot2)
+
+  ci <- qnorm(1-alpha/2, 0, 1)/nrow(resids)^.5
+  
   ccs.melt <- melt(ccs, id.var='lag')
+  # Determine the Color of the Bars
   fill.palette <- gg_color_hue(2)
   if (all(abs(ccs.melt$value) >= ci)) {
     fill.palette <- fill.palette[1]
